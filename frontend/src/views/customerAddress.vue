@@ -116,9 +116,9 @@
               </p>
             </div>
 
-            <div class="k-fe field" v-if="showadd1 == true">
+            <div class="k-fe field" v-if="showadd1 == true && showadd2 == false">
               <p class="control">
-                <button class="k-bu button">บันทึกการเปลี่ยนแปลง</button>
+                <button class="k-bu button" @click="changeAddress()">บันทึกการเปลี่ยนแปลง</button>
               </p>
             </div>
             <!--1-->
@@ -127,7 +127,7 @@
             <div class="k-title ti1 title is-size-6">
               รหัสไปรษณีย์
               <a
-                @click="showadd2 = true"
+                @click="showadd2 = true "
                 v-if="showadd2 == false"
                 style="color: black"
                 ><span> เปลี่ยน </span></a
@@ -151,14 +151,22 @@
               </p>
             </div>
 
-            <div class="k-fe field" v-if="showadd2 == true">
+            <div class="k-fe field" v-if="showadd2 == true  && showadd1 == false">
               <p class="control">
-                <button class="k-bu button" @click="changeAddress()">
+                <button class="k-bu button" @click="changeAddress()" >
                   บันทึกการเปลี่ยนแปลง
                 </button>
               </p>
             </div>
             <!--2-->
+
+            <div class="k-fe field" v-if="showadd1 == true && showadd2 == true">
+              <p class="control">
+                <button class="k-bu button" @click="changeAddress()">
+                  บันทึกการเปลี่ยนแปลงทั้งหมด
+                </button>
+              </p>
+            </div>
 
             <div>
                 <p>ที่อยู่ : {{address.address}}</p>
