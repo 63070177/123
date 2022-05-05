@@ -345,7 +345,7 @@ router.get('/address/:userId', async function (req, res, next) {
 })
 
 router.get('/order', async function (req, res, next) {
-    const [rows, _] = await pool.query('select * from CART join CART_ITEM using (cart_id) join BOOK using (book_id) join ADDRESS on (CART.customer_id = ADDRESS.user_id) join USER using (user_id)')
+    const [rows, _] = await pool.query('select cart_id, title, quantity, price, first_name, last_name, address, phone from CART join CART_ITEM using (cart_id) join BOOK using (book_id) join ADDRESS on (CART.customer_id = ADDRESS.user_id) join USER using (user_id) order by cart_id DESC')
     res.json(rows)
 })
 
