@@ -315,12 +315,12 @@ router.put('/updateAddress/:userId', async function (req, res, next) {
     await conn.beginTransaction()
 
     try {
-        if (address != ""){
+        if (address != "" && postcode != ""){
+            await conn.query(`update ADDRESS set address=? where user_id = ?`, [address, userId])
+            await conn.query(`update ADDRESS set postcode=? where user_id = ?`, [postcode, userId])
+        } else if (address != ""){
             await conn.query(`update ADDRESS set address=? where user_id = ?`, [address, userId])
         } else if (postcode != ""){
-            await conn.query(`update ADDRESS set postcode=? where user_id = ?`, [postcode, userId])
-        } else if (address != "" && postcode != ""){
-            await conn.query(`update ADDRESS set address=? where user_id = ?`, [address, userId])
             await conn.query(`update ADDRESS set postcode=? where user_id = ?`, [postcode, userId])
         }
         conn.commit()
