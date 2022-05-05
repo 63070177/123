@@ -143,11 +143,27 @@ router.get('/user/cart/:userId', async function (req, res, next) {
     }
 })
 
+router.get('/user/cart/total/:userId', async function (req, res, next) {
+    const userId = req.params.userId
+
+    try {
+        const [rows, _] = await pool.query(`SELECT sum(total_price) total_price FROM CART where customer_id=?`, [userId])
+        res.json(rows)
+    } catch (error) {
+        res.status(400).json(error.toString())
+    }
+})
+
 router.get('/user/cart_item/:userId', async function (req, res, next) {
     const userId = req.params.userId
 
     try {
-        const [rows, _] = await pool.query(`SELECT * FROM CART join CART_ITEM using (cart_id) join BOOK using (book_id) where customer_id=?`, [userId])
+        const [rows, _] = await pool.query(`SELECT image_url1, title, book_id, price, sum(quantity) quantity
+        FROM CART 
+        join CART_ITEM ct using (cart_id) 
+        join BOOK using (book_id)
+        WHERE customer_id=?
+        group by book_id`, [userId])
         res.json(rows)
     } catch (error) {
         res.status(400).json(err.toString())
@@ -165,10 +181,10 @@ router.put('/user/forgetPassword', async function (req, res, next) {
         const [rows, _] = await conn.query(`select * from USER where username=?`, [username])
         const user = rows[0]
         if (user.password != password) {
-            console.log(user.password)
-            console.log(password)
+            console.log('old password:' + user.password)
+            console.log('new password:'+ password)
 
-            await conn.query(`update USER set password = ? where username = ?`, [username, password])
+            await conn.query(`update USER set password = ? where username = ?`, [password, username])
             conn.commit()
             res.send('update succesful!')
         } else {
@@ -318,9 +334,11 @@ router.put('/updateAddress/:userId', async function (req, res, next) {
         if (address != "" && postcode != ""){
             await conn.query(`update ADDRESS set address=? where user_id = ?`, [address, userId])
             await conn.query(`update ADDRESS set postcode=? where user_id = ?`, [postcode, userId])
-        } else if (address != ""){
+        }
+        else if (address != ""){
             await conn.query(`update ADDRESS set address=? where user_id = ?`, [address, userId])
-        } else if (postcode != ""){
+        }
+        else if (postcode != ""){
             await conn.query(`update ADDRESS set postcode=? where user_id = ?`, [postcode, userId])
         }
         conn.commit()
