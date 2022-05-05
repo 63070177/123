@@ -256,22 +256,31 @@ export default {
       const userId = this.user.user_id
       this.$router.push(`/customerAddress/${userId}`)
     },
-    newPasswordd () {
-      const data = {
+     newPasswordd () {
+      if(this.newPassword == this.confirmPassword){
+        const data = {
         username: this.user.username,
-        confirmpassword: this.confirmpassword
+        confirmpassword: this.confirmPassword
       }
       axios.put(`http://localhost:3000/user/forgetPassword`, data).then((response) => {
             console.log(response)
             if (response.data == "error"){
           alert('รหัสผ่านนี้เป็นรหัสปัจจุบันของคุณ')
         }else{
-            this.$router.push({ path: "/homePage" });
+            alert('เปลี่ยนรหัสผ่านเรียบร้อยแล้ว')
+            const userId = this.user.user_id
+            this.$router.push(`/homePage/${userId}`)
         }
         }).catch((err) => {
           console.log(err)
           alert('กรุณากรอกข้อมูลใหม่ เนื่องจากชื่อผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้อง')
       });
+      }
+      else
+      {
+        alert('รหัสผ่านไม่ตรงกัน ไม่สามารถเปลี่ยนได้')
+      }
+      
     },
     toLogin() {
       this.$router.push(`/loginPage`);
