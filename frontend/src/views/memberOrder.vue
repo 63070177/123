@@ -115,7 +115,7 @@
               <hr />
             </div>
             <p>
-              ราคารวมทั้งหมด : <b>{{ cart.total_price }}</b> บาท
+              ราคารวมทั้งหมด : <b>{{ total[0].total_price }}</b> บาท
             </p>
           </div>
           <div class="gconfirm">
@@ -214,6 +214,7 @@ export default {
       showadd2: false,
       cart: [],
       cart_item: [],
+      total:[],
       show_modal: false,
     };
   },
@@ -226,10 +227,14 @@ export default {
     axios.get(`http://localhost:3000/user/cart/${userId}`).then((response) => {
         this.cart = response.data[0]
         console.log(response.data)
-    })
+    });
     axios.get(`http://localhost:3000/user/cart_item/${userId}`).then((response) => {
         console.log(response.data)
         this.cart_item = response.data
+    });
+    axios.get(`http://localhost:3000/user/cart/total/${userId}`).then((response) => {
+        console.log(response.data)
+        this.total = response.data
     });
   },
   methods: {
