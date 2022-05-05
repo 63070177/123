@@ -165,10 +165,10 @@ router.put('/user/forgetPassword', async function (req, res, next) {
         const [rows, _] = await conn.query(`select * from USER where username=?`, [username])
         const user = rows[0]
         if (user.password != password) {
-            console.log(user.password)
-            console.log(password)
+            console.log('old password:' + user.password)
+            console.log('new password:'+ password)
 
-            await conn.query(`update USER set password = ? where username = ?`, [username, password])
+            await conn.query(`update USER set password = ? where username = ?`, [password, username])
             conn.commit()
             res.send('update succesful!')
         } else {
